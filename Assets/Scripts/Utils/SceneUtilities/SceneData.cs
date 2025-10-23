@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 public enum Scene
 {
-    SampleScene,
+    GameScene,
+    MainMenu,
 }
 public class SceneData
 {
     public static Dictionary<int, string> SceneDataDict = new()
     {
-    { 0, "SampleScene"},
+    { 0, "GameScene"},
+    { 1, "MainMenu"},
     };
 }
