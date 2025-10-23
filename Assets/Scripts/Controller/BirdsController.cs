@@ -6,31 +6,22 @@ namespace DefaultNamespace.Controller
 {
     public class BirdsController : EntityController
     {
-        #region Inspector Variables
-        #endregion Inspector Variables
+        private BirdsView birdsView;
 
-        #region Public Variables
-        #endregion Public Variables
-
-        #region Private Variables
-        #endregion Private Variables
-
-        #region Monobehaviour Methods
-        #endregion Monobehaviour Methods
-
-        #region Private Methods
-        #endregion Private Methods
-
-        #region Public Methods
         public override void OnGameStart()
         {
-            GetView<BirdsView>().OnGameStart();
+            birdsView = GetView<BirdsView>();
+            birdsView.OnGameStart();
+        }
+
+        private void Update()
+        {
+            birdsView.HandleInput();
         }
 
         public override void OnGameOver()
         {
-            
+            birdsView.OnGameOver();
         }
-        #endregion Public Methods
     }
 }

@@ -22,6 +22,7 @@ namespace DefaultNamespace.Controller
         #region Private Methods
         private void Start()
         {
+            Application.targetFrameRate = 60;
             OnGameStart();
         }
         #endregion Private Methods

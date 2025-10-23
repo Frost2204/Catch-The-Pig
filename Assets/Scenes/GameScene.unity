@@ -1134,6 +1134,7 @@ MonoBehaviour:
   waitTime: 0.1
   rotationAngle: 5
   scaleFactor: 1.2
+  glideSmooth: 0.1
 --- !u!1 &1195645405
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,6 +1444,7 @@ MonoBehaviour:
   rotationAngle: 20
   scaleFactor: 1.2
   startDelay: 0.5
+  glideSmooth: 0.1
 --- !u!1 &1531681566
 GameObject:
   m_ObjectHideFlags: 0
@@ -1666,6 +1668,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 561448392}
     m_Modifications:
+    - target: {fileID: 1888245235132766829, guid: 89151d17347fe79409cb2c4fabd6dcf3, type: 3}
+      propertyPath: pig
+      value: 
+      objectReference: {fileID: 1496188853}
+    - target: {fileID: 1888245235132766829, guid: 89151d17347fe79409cb2c4fabd6dcf3, type: 3}
+      propertyPath: bird
+      value: 
+      objectReference: {fileID: 914643790}
+    - target: {fileID: 1888245235132766829, guid: 89151d17347fe79409cb2c4fabd6dcf3, type: 3}
+      propertyPath: moveSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1888245235132766829, guid: 89151d17347fe79409cb2c4fabd6dcf3, type: 3}
+      propertyPath: pigTransform
+      value: 
+      objectReference: {fileID: 1496188852}
+    - target: {fileID: 1888245235132766829, guid: 89151d17347fe79409cb2c4fabd6dcf3, type: 3}
+      propertyPath: birdTransform
+      value: 
+      objectReference: {fileID: 914643789}
+    - target: {fileID: 1888245235132766829, guid: 89151d17347fe79409cb2c4fabd6dcf3, type: 3}
+      propertyPath: clicksRequired
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1888245235132766829, guid: 89151d17347fe79409cb2c4fabd6dcf3, type: 3}
+      propertyPath: autoRetreatInterval
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4728461346857744196, guid: 89151d17347fe79409cb2c4fabd6dcf3, type: 3}
       propertyPath: m_Name
       value: BirdsSystem
