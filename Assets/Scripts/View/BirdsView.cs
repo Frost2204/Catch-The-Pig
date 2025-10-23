@@ -2,6 +2,8 @@ using Common;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using AudioManager;
 
 namespace DefaultNamespace.View
 {
@@ -10,11 +12,12 @@ namespace DefaultNamespace.View
         [Header("References")]
         [SerializeField] private BirdComponent bird;
         [SerializeField] private PigComponent pig;
-        [SerializeField] private Slider distanceSlider; // Shows progress
-        [SerializeField] private GameObject winCanvas;  // Shown when completed
+        [SerializeField] private SpriteRenderer pigSprite; // ✅ Now assigned in Inspector
+        [SerializeField] private Slider distanceSlider;    // Shows progress
+        [SerializeField] private GameObject winCanvas;     // Shown when completed
 
         [Header("Gameplay Settings")]
-        [SerializeField] private int totalSteps = 6; // Example: 6 steps max
+        [SerializeField] private int totalSteps = 6;
         [SerializeField] private float moveStep = 1f;
         [SerializeField] private float clickTimeWindow = 1f;
         [SerializeField] private int clicksRequired = 3;
@@ -36,17 +39,15 @@ namespace DefaultNamespace.View
 
         public override void OnGameStart()
         {
-            // Unsubscribe before re-adding listeners (prevents multiple bindings)
+            // Unsubscribe old listeners first
             if (restartLevelButton != null)
                 restartLevelButton.onClick.RemoveAllListeners();
-
             if (menuButton != null)
                 menuButton.onClick.RemoveAllListeners();
 
             // Add button listeners
             if (restartLevelButton != null)
                 restartLevelButton.onClick.AddListener(OnRestartLevelClicked);
-
             if (menuButton != null)
                 menuButton.onClick.AddListener(OnMenuClicked);
 
@@ -56,39 +57,43 @@ namespace DefaultNamespace.View
             retreatTimer = 0f;
             currentStep = 0;
             gameEnded = false;
-
-            Time.timeScale = 1f; // Ensure gameplay runs
+            Time.timeScale = 1f;
 
             if (bird != null && pig != null)
                 initialDistance = Mathf.Abs(bird.transform.position.x - pig.transform.position.x);
 
             if (distanceSlider != null)
             {
-                distanceSlider.minValue = 0f;
-                distanceSlider.maxValue = 1f;
                 distanceSlider.value = 0f;
             }
 
             if (winCanvas != null)
                 winCanvas.SetActive(false);
+
+            bird?.ResumeAnimation();
+            pig?.ResumeAnimation();
+
+            // ✅ Reset pig color to white
+            if (pigSprite != null)
+                pigSprite.color = Color.white;
+        }
+
+        private void OnRestartLevelClicked()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(1);
+        }
+
+        private void OnMenuClicked()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(0);
         }
 
         public override void OnGameOver()
         {
             bird.StopMovement();
             pig.StopMovement();
-        }
-
-        private void OnRestartLevelClicked()
-        {
-            Time.timeScale = 1f; // Unpause before loading
-            SceneManager.LoadScene(1); // Reload main level scene
-        }
-
-        private void OnMenuClicked()
-        {
-            Time.timeScale = 1f; // Unpause before loading
-            SceneManager.LoadScene(0); // Load menu scene
         }
 
         public void HandleInput()
@@ -123,7 +128,7 @@ namespace DefaultNamespace.View
                 CheckForWin();
             }
 
-            // Auto retreat every interval
+            // Auto retreat every few seconds
             retreatTimer += Time.deltaTime;
             if (retreatTimer >= autoRetreatInterval)
             {
@@ -151,17 +156,36 @@ namespace DefaultNamespace.View
             if (currentStep >= totalSteps)
             {
                 gameEnded = true;
-                OnWin();
+                StartCoroutine(HandleWinSequence());
             }
         }
 
-        private void OnWin()
+        private IEnumerator HandleWinSequence()
         {
-            // Show win screen and pause the game
+            // Pause animations
+            bird.PauseAnimation();
+            pig.PauseAnimation();
+            AudioManager.AudioManager.Instance.PlaySFX(SFX_Type.PIG_CRY, 0.3f);
+            // ✅ Fast flick (red ↔ white)
+            if (pigSprite != null)
+            {
+                Color original = pigSprite.color;
+                for (int i = 0; i < 10; i++) // flick 4 times quickly
+                {
+                    pigSprite.color = (i % 2 == 0) ? Color.red : original;
+                    yield return new WaitForSecondsRealtime(0.2f); // fast flick (0.1 sec per change)
+                }
+                pigSprite.color = original;
+            }
+
+            // ✅ Show win screen and pause
             if (winCanvas != null)
                 winCanvas.SetActive(true);
 
+            AudioManager.AudioManager.Instance.PlaySFX(SFX_Type.WON, 0.3f);
+
             Time.timeScale = 0f;
         }
+
     }
 }

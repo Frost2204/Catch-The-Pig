@@ -1,6 +1,7 @@
 using Common;
 using UnityEngine;
 using System.Collections;
+using AudioManager;
 
 public class BirdComponent : MonoBehaviour
 {
@@ -19,13 +20,15 @@ public class BirdComponent : MonoBehaviour
 
     private float targetX;
     private bool shouldMove = false;
+    private bool isPaused = false;
     private Vector3 originalScale;
+    private Coroutine jumpRoutine;
 
     private void Start()
     {
         originalScale = transform.localScale;
         targetX = transform.position.x;
-        StartCoroutine(JumpLoop());
+        jumpRoutine = StartCoroutine(JumpLoop());
     }
 
     private void Update()
@@ -52,20 +55,36 @@ public class BirdComponent : MonoBehaviour
         shouldMove = false;
     }
 
+    public void PauseAnimation()
+    {
+        isPaused = true;
+    }
+
+    public void ResumeAnimation()
+    {
+        isPaused = false;
+    }
+
     private IEnumerator JumpLoop()
     {
         while (true)
         {
+            if (isPaused) { yield return null; continue; }
+
             float baseY = transform.position.y;
             float targetY = baseY + jumpHeight;
 
             // Jump up
             while (transform.position.y < targetY)
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y + jumpSpeed * Time.deltaTime, transform.position.z);
-                float tilt = Mathf.Lerp(0f, rotationAngle, (transform.position.y - baseY) / jumpHeight);
-                transform.rotation = Quaternion.Euler(0, 0, tilt);
-                yield return null;
+                if (isPaused) yield return null;
+                else
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y + jumpSpeed * Time.deltaTime, transform.position.z);
+                    float tilt = Mathf.Lerp(0f, rotationAngle, (transform.position.y - baseY) / jumpHeight);
+                    transform.rotation = Quaternion.Euler(0, 0, tilt);
+                    yield return null;
+                }
             }
 
             transform.position = new Vector3(transform.position.x, targetY, transform.position.z);
@@ -74,24 +93,27 @@ public class BirdComponent : MonoBehaviour
             // Fall down
             while (transform.position.y > baseY)
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y - jumpSpeed * Time.deltaTime, transform.position.z);
-                float tilt = Mathf.Lerp(rotationAngle, 0f, (targetY - transform.position.y) / jumpHeight);
-                transform.rotation = Quaternion.Euler(0, 0, tilt);
+                if (isPaused) yield return null;
+                else
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y - jumpSpeed * Time.deltaTime, transform.position.z);
+                    float tilt = Mathf.Lerp(rotationAngle, 0f, (targetY - transform.position.y) / jumpHeight);
+                    transform.rotation = Quaternion.Euler(0, 0, tilt);
 
-                if (transform.position.y < baseY)
-                    transform.position = new Vector3(transform.position.x, baseY, transform.position.z);
+                    if (transform.position.y < baseY)
+                        transform.position = new Vector3(transform.position.x, baseY, transform.position.z);
 
-                yield return null;
+                    yield return null;
+                }
             }
 
             transform.rotation = Quaternion.identity;
-
-            // Landing squash
             transform.localScale = new Vector3(originalScale.x * scaleFactor, originalScale.y / scaleFactor, originalScale.z);
             yield return new WaitForSeconds(0.1f);
             transform.localScale = originalScale;
-
             yield return new WaitForSeconds(waitTime);
+
+            AudioManager.AudioManager.Instance.PlaySFX(SFX_Type.JUMP_CLIP, 0.3f);
         }
     }
 }

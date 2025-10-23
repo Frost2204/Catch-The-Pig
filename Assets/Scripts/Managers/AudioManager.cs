@@ -13,6 +13,9 @@ namespace AudioManager
         [Header("Audio Clips")]
         [SerializeField] private AudioClip musicClip;
         [SerializeField] private AudioClip buttonClickClip;
+        [SerializeField] private AudioClip jumpClip;
+        [SerializeField] private AudioClip wonSound;
+        [SerializeField] private AudioClip pigCry;
         // Add other audio clips here
         #endregion
 
@@ -55,7 +58,15 @@ namespace AudioManager
                     case SFX_Type.BUTTON_CLICK:
                         sfxAudioSource.PlayOneShot(buttonClickClip, volume);
                         break;
-
+                    case SFX_Type.JUMP_CLIP:
+                        sfxAudioSource.PlayOneShot(jumpClip, volume);
+                        break;
+                    case SFX_Type.WON:
+                        sfxAudioSource.PlayOneShot(wonSound, volume);
+                        break;
+                    case SFX_Type.PIG_CRY:
+                        sfxAudioSource.PlayOneShot(pigCry, volume);
+                        break;
                         // add other sfx types here
                 }
             }

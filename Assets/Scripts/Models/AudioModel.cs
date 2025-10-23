@@ -9,6 +9,8 @@ namespace AudioManager
     public enum SFX_Type
     {
         BUTTON_CLICK,
-        // Add other SFX types here
+        JUMP_CLIP,
+        WON,
+        PIG_CRY
     }
 }
