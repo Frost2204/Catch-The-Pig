@@ -1,0 +1,26 @@
+using Common;
+using Utils;
+using UnityEngine;
+
+    #ROOTNAMESPACEBEGIN#
+public class #SCRIPTNAME# : SingletonUtility<#SCRIPTNAME#>
+{
+    #region Inspector Variables
+    #endregion Inspector Variables
+
+    #region Public Variables
+    #endregion Public Variables
+
+    #region Private Variables
+    #endregion Private Variables
+
+    #region Monobehaviour Methods
+    #endregion Monobehaviour Methods
+
+    #region Private Methods
+    #endregion Private Methods
+
+    #region Public Methods
+    #endregion Public Methods
+}
+#ROOTNAMESPACEEND#

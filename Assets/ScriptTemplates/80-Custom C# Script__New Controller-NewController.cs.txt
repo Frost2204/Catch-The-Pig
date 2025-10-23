@@ -1,0 +1,34 @@
+using Common;
+using UnityEngine;
+
+    #ROOTNAMESPACEBEGIN#
+public class #SCRIPTNAME# : EntityController
+{
+    #region Inspector Variables
+    #endregion Inspector Variables
+
+    #region Public Variables
+    #endregion Public Variables
+
+    #region Private Variables
+    #endregion Private Variables
+
+    #region Monobehaviour Methods
+    #endregion Monobehaviour Methods
+
+    #region Private Methods
+    #endregion Private Methods
+
+    #region Public Methods
+    public override void OnGameStart()
+    {
+        #NOTRIM#
+    }
+
+    public override void OnGameOver()
+    {
+        #NOTRIM#
+    }
+    #endregion Public Methods
+}
+#ROOTNAMESPACEEND#

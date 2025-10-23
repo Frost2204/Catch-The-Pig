@@ -1,0 +1,11 @@
+using Common;
+using UnityEngine;
+
+namespace #NAMESPACE#.Model
+{
+    public class #SCRIPTNAME#
+    {
+    
+    }
+}
+
